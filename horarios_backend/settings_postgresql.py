@@ -1,9 +1,8 @@
-# horarios_backend/settings.py - ARCHIVO LIMPIO
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()  # Carga variables del archivo .env
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -13,8 +12,6 @@ SECRET_KEY = os.getenv('DJANGO_SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -69,15 +66,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'horarios_backend.wsgi.application'
 
-# Database
+# Database - PostgreSQL with explicit UTF-8
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'horarios_db'),
-        'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'NAME': 'horarios_db',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
         'OPTIONS': {
             'client_encoding': 'UTF8',
         },

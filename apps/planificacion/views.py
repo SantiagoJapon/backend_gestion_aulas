@@ -14,23 +14,30 @@ class PlanificacionListCreateView(generics.ListCreateAPIView):
     
     def get_queryset(self):
         user = self.request.user
-        if user.rol == 'director':
+        perfil = getattr(user, 'perfil', None)
+        rol = getattr(perfil, 'rol', None) if perfil else None
+
+        if rol == 'director':
             return PlanificacionAcademica.objects.filter(director=user)
-        elif user.rol in ['administrador']:
+        elif rol == 'administrador':
             return PlanificacionAcademica.objects.all()
         return PlanificacionAcademica.objects.none()
     
     def perform_create(self, serializer):
-        if self.request.user.rol == 'director':
+        perfil = getattr(self.request.user, 'perfil', None)
+        rol = getattr(perfil, 'rol', None) if perfil else None
+
+        if rol == 'director':
             planificacion = serializer.save(director=self.request.user)
-            # Procesar archivo de planificación de forma asíncrona
             procesar_planificacion_task.delay(planificacion.id)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def cargar_planificacion_excel_view(request):
-    """Vista para procesar archivo Excel de planificación"""
-    if request.user.rol != 'director':
+    perfil = getattr(request.user, 'perfil', None)
+    rol = getattr(perfil, 'rol', None) if perfil else None
+
+    if rol != 'director':
         return Response({'error': 'Solo los directores pueden cargar planificaciones'}, 
                        status=status.HTTP_403_FORBIDDEN)
     
@@ -69,10 +76,13 @@ class ClasePlanificadaListView(generics.ListAPIView):
     
     def get_queryset(self):
         user = self.request.user
-        if user.rol == 'docente':
+        perfil = getattr(user, 'perfil', None)
+        rol = getattr(perfil, 'rol', None) if perfil else None
+
+        if rol == 'docente':
             return ClasePlanificada.objects.filter(docente=user)
-        elif user.rol == 'director':
+        elif rol == 'director':
             return ClasePlanificada.objects.filter(planificacion__director=user)
-        elif user.rol == 'administrador':
+        elif rol == 'administrador':
             return ClasePlanificada.objects.all()
         return ClasePlanificada.objects.none()
