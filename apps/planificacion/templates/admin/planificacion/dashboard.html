@@ -1,0 +1,193 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}Dashboard de Planificación{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Inicio</a>
+    &rsaquo; Dashboard de Planificación
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-stats">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <h3>{{ total_usuarios }}</h3>
+                <p>Total Usuarios</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <h3>{{ total_carreras }}</h3>
+                <p>Carreras Activas</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <h3>{{ total_materias }}</h3>
+                <p>Materias</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <h3>{{ total_aulas }}</h3>
+                <p>Aulas Disponibles</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-content">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="module">
+                <h2>Planificaciones Recientes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Período</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for planificacion in planificaciones_recientes %}
+                        <tr>
+                            <td><a href="{% url 'admin:planificacion_planificacionacademica_change' planificacion.id %}">{{ planificacion.nombre }}</a></td>
+                            <td>{{ planificacion.periodo }}</td>
+                            <td>
+                                <span class="badge badge-{{ planificacion.estado }}">
+                                    {{ planificacion.get_estado_display }}
+                                </span>
+                            </td>
+                            <td>{{ planificacion.fecha_creacion|date:"d/m/Y" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4">No hay planificaciones recientes</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="module">
+                <h2>Conflictos Pendientes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for conflicto in conflictos_pendientes %}
+                        <tr>
+                            <td>{{ conflicto.get_tipo_display }}</td>
+                            <td>{{ conflicto.descripcion|truncatechars:50 }}</td>
+                            <td>{{ conflicto.fecha_deteccion|date:"d/m/Y" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3">No hay conflictos pendientes</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-stats {
+    margin-bottom: 20px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.col-md-3, .col-md-6 {
+    padding: 0 15px;
+    flex: 0 0 auto;
+}
+
+.col-md-3 { width: 25%; }
+.col-md-6 { width: 50%; }
+
+.stat-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+}
+
+.stat-card h3 {
+    font-size: 2em;
+    margin: 0 0 10px 0;
+    color: #417690;
+}
+
+.stat-card p {
+    margin: 0;
+    color: #666;
+}
+
+.module {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.module h2 {
+    background: #417690;
+    color: white;
+    margin: 0;
+    padding: 10px 15px;
+    border-radius: 4px 4px 0 0;
+}
+
+.module table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.module table th,
+.module table td {
+    padding: 8px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.module table th {
+    background: #f1f1f1;
+    font-weight: bold;
+}
+
+.badge {
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.badge-borrador { background: #6c757d; color: white; }
+.badge-revision { background: #ffc107; color: #212529; }
+.badge-aprobada { background: #28a745; color: white; }
+.badge-vigente { background: #007bff; color: white; }
+.badge-cerrada { background: #dc3545; color: white; }
+</style>
+{% endblock %}

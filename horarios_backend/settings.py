@@ -69,7 +69,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'horarios_backend.wsgi.application'
 
-# Database
+# Database configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -83,6 +83,14 @@ DATABASES = {
         },
     }
 }
+
+# SQLite configuration for development/testing
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # Modelo de usuario personalizado
 AUTH_USER_MODEL = 'usuarios.CustomUser'
