@@ -8,9 +8,9 @@ urlpatterns = [
     path('api/aulas/', include('apps.aulas.urls')),
     path('api/bot/', include('apps.bot_telegram.urls')),
     path('api/reportes/', include('apps.reportes.urls')),
-    # Comentamos temporalmente las que pueden dar problemas
+    # APIs principales
+    path('api/planificacion/', include('apps.planificacion.urls')),
     # path('api/auth/', include('apps.usuarios.urls')),
-    # path('api/planificacion/', include('apps.planificacion.urls')),
     # path('api/asignaciones/', include('apps.asignaciones.urls')),
 ]
 
